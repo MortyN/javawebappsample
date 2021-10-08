@@ -10,9 +10,9 @@ podTemplate(yaml: '''
         args:
         - 99d
         env:
-        - name: resourceGroup
+          - name: resourceGroup
             value: rg-app-service
-        - name: webAppName
+          - name: webAppName
             value: app-service-ci 
 ''') {
     node(POD_LABEL) {
