@@ -14,6 +14,7 @@ spec:
 )   {
         node(POD_LABEL) {
             stage('Build') {
+                checkout scm
                 container('maven') {
                 sh """
                     mvn -version ; mvn clean package
