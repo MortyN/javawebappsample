@@ -4,7 +4,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.3.9-jdk-8-alpine
+    image: maven:3.8.3-adoptopenjdk-8
     env:
       - name: resourceGroup
         value: rg-app-service
