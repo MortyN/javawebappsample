@@ -4,7 +4,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.8.3-adoptopenjdk-8
+    image: maven:3.8.3-jdk-8-openj9
     env:
       - name: resourceGroup
         value: rg-app-service
@@ -17,16 +17,8 @@ spec:
                 checkout scm
                 container('maven') {
                 sh """
-                    mvn -version ; mvn clean package
+                    mvn -version
                                                         """
-                }
-            }
-            stage('Deploy') {
-                def testvalue = "piffting"
-                container('docker') {               
-                sh """
-                   echo $resourceGroup ; echo $testvalue 
-                """
                 }
             }
         }
