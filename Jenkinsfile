@@ -3,27 +3,29 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: docker
-    image: docker:latest
-    command: ['cat']
-    tty: true
-    volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
-    imagePullSecrets:
-    - name: regcred
-  volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
+  - name: maven
+    image: maven:3.3.9-jdk-8-alpine
+    env:
+      - name: resourceGroup
+        value: rg-app-service
+      - name: webAppName
+        value: app-service-ci       
 """
 )   {
         node(POD_LABEL) {
             stage('Build') {
-                container('docker') {
+                container('maven') {
                 sh """
-                echo 'helloworld'
+                    mvn -version ; mvn clean package
                                                         """
+                }
+            }
+            stage('Deploy') {
+                def testvalue = "piffting"
+                container('docker') {               
+                sh """
+                   echo $resourceGroup ; echo $testvalue 
+                """
                 }
             }
         }
