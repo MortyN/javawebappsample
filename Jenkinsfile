@@ -1,28 +1,51 @@
-podTemplate(yaml: """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: maven
-    image: maven:3.8.3-jdk-8-openj9
-    env:
-      - name: resourceGroup
-        value: rg-app-service
-      - name: webAppName
-        value: app-service-ci       
-"""
-)   {
-        node(POD_LABEL) {
-            stage('Build') {
-                checkout scm
-                container('maven') {
-                sh """
-                    mvn -version
-                                                        """
-                }
-            }
+podTemplate(yaml: '''
+    apiVersion: v1
+    kind: Pod
+    spec:
+      containers:
+      - name: maven
+        image: maven:3.8.1-jdk-8
+        command:
+        - sleep
+        args:
+        - 99d
+''') {
+  node(POD_LABEL) {
+    stage('Get a Maven project') {
+      container('maven') {
+        stage('Build a Maven project') {
+          sh 'mvn -version'
         }
+      }
     }
+  }
+}
+
+// podTemplate(yaml: """
+// apiVersion: v1
+// kind: Pod
+// spec:
+//   containers:
+//   - name: maven
+//     image: maven:3.8.3-jdk-8-openj9
+//     env:
+//       - name: resourceGroup
+//         value: rg-app-service
+//       - name: webAppName
+//         value: app-service-ci       
+// """
+// )   {
+//         node(POD_LABEL) {
+//             stage('Build') {
+//                 checkout scm
+//                 container('maven') {
+//                 sh """
+//                     mvn -version
+//                                                         """
+//                 }
+//             }
+//         }
+//     }
 
 // podTemplate(label: 'mypod', containers: [
 //     containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', command: 'cat', ttyEnabled: true, envVars: [
