@@ -29,7 +29,7 @@ podTemplate(yaml: '''
             container('maven') {
                 stage('azure deployment') {
                     sh """
-                    echo $resourceGroup ; echo $testvalue 
+                    echo $testvalue 
                     """
                 }
             }
