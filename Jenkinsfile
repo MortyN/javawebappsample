@@ -49,9 +49,22 @@ podTemplate(yaml: '''
         stage('Deploying Maven project') {
             def resourceGroup = 'rg-app-service'
             def webAppName = 'app-service-ci'
-
             container('azurecli') {
-                sh 'az'
+                def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
+                def ftpProfile = getFtpPublishProfile pubProfilesJson
+                stage('azure login') {
+                    withCredentials([usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
+                        sh '''
+                            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+                            az account set -s $AZURE_SUBSCRIPTION_ID
+                            '''
+                        }
+                }
+                stage('deploy') {
+                    sh """
+                          sh "curl -T target/calculator-1.0.war $ftpProfile.url/webapps/ROOT.war -u '$ftpProfile.username:$ftpProfile.password'" ; az logout
+                    """
+                }
             }
         }
     }
