@@ -17,9 +17,7 @@ podTemplate(yaml: '''
         command:
         - sleep
         args:
-        - 9999999
-        command:
-        - cat
+        - 99d
         tty: true
         volumeMounts:
         - mountPath: '/opt/app/shared'
@@ -29,9 +27,7 @@ podTemplate(yaml: '''
         command:
         - sleep
         args:
-        - 9999999
-        command:
-        - cat
+        - 99d
         tty: true
         volumeMounts:
         - mountPath: '/opt/app/shared'
@@ -39,6 +35,7 @@ podTemplate(yaml: '''
       volumes:
       - name: sharedvolume
         emptyDir: {}
+
 ''') {
     node(POD_LABEL) {
         stage('Get a Maven project') {
