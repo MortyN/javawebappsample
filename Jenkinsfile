@@ -12,16 +12,6 @@ podTemplate(yaml: '''
     kind: Pod
     spec:
       containers:
-      - name: maven
-        image: maven:3.8.1-jdk-8
-        command:
-        - sleep
-        args:
-        - 99d
-        tty: true
-        volumeMounts:
-        - mountPath: '/opt/app/shared'
-          name: sharedvolume
       - name: azurecli
         image: mcr.microsoft.com/azure-cli:latest
         command:
@@ -29,12 +19,6 @@ podTemplate(yaml: '''
         args:
         - 99d
         tty: true
-        volumeMounts:
-        - mountPath: '/opt/app/shared'
-          name: sharedvolume
-      volumes:
-      - name: sharedvolume
-        emptyDir: {}
 
 ''') {
     node(POD_LABEL) {
@@ -59,7 +43,7 @@ podTemplate(yaml: '''
                     def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
                     def ftpProfile = getFtpPublishProfile pubProfilesJson
                     sh """
-                          curl -T ./target/sample.war $ftpProfile.url/webapps/ROOT/ROOT.war -u '$ftpProfile.username:$ftpProfile.password' ; az logout
+                          curl -T ./target/sample.war $ftpProfile.url/webapps/ROOT.war -u '$ftpProfile.username:$ftpProfile.password' ; az logout
                     """
                 }
             }
