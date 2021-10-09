@@ -40,7 +40,6 @@ podTemplate(yaml: '''
       - name: sharedvolume
         emptyDir: {}
 
-        mcr.microsoft.com/azure-cli
 ''') {
     node(POD_LABEL) {
         stage('Get a Maven project') {
