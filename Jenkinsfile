@@ -49,8 +49,7 @@ podTemplate(yaml: '''
         stage('Deploying Maven project') {
             def resourceGroup = 'rg-app-service'
             def webAppName = 'app-service-ci'
-            def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
-            def ftpProfile = getFtpPublishProfile pubProfilesJson
+
             container('azurecli') {
                 sh 'az'
             }
