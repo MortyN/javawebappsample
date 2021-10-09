@@ -59,7 +59,7 @@ podTemplate(yaml: '''
                     def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
                     def ftpProfile = getFtpPublishProfile pubProfilesJson
                     sh """
-                          curl -T ./target/Lab6A.war $ftpProfile.url/ROOT.war -u '$ftpProfile.username:$ftpProfile.password' ; az logout
+                          curl -T ./target/sample.war $ftpProfile.url/ROOT.war -u '$ftpProfile.username:$ftpProfile.password' ; az logout
                     """
                 }
             }
