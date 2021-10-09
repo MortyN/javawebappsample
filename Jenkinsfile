@@ -50,8 +50,6 @@ podTemplate(yaml: '''
             def resourceGroup = 'rg-app-service'
             def webAppName = 'app-service-ci'
             container('azurecli') {
-                def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
-                def ftpProfile = getFtpPublishProfile pubProfilesJson
                 stage('azure login') {
                     withCredentials([usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         sh '''
@@ -61,6 +59,8 @@ podTemplate(yaml: '''
                         }
                 }
                 stage('deploy') {
+                    def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
+                    def ftpProfile = getFtpPublishProfile pubProfilesJson
                     sh """
                           sh "curl -T target/calculator-1.0.war $ftpProfile.url/webapps/ROOT.war -u '$ftpProfile.username:$ftpProfile.password'" ; az logout
                     """
