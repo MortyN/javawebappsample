@@ -38,14 +38,6 @@ podTemplate(yaml: '''
 
 ''') {
     node(POD_LABEL) {
-        stage('Get a Maven project') {
-            checkout scm
-            container('maven') {
-                stage('Build a Maven project') {
-                sh 'mvn clean package'
-                }
-            }
-        }
         stage('Deploying Maven project') {
             def resourceGroup = 'rg-app-service'
             def webAppName = 'app-service-ci'
@@ -66,7 +58,7 @@ podTemplate(yaml: '''
                     def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
                     def ftpProfile = getFtpPublishProfile pubProfilesJson
                     sh """
-                          sh "curl -T target/calculator-1.0.war $ftpProfile.url/webapps/ROOT.war -u '$ftpProfile.username:$ftpProfile.password'" ; az logout
+                          sh "curl -T target/sample-1.0.war $ftpProfile.url/webapps/ROOT.war -u '$ftpProfile.username:$ftpProfile.password'" ; az logout
                     """
                 }
             }
