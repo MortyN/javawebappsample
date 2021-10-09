@@ -52,8 +52,8 @@ podTemplate(yaml: '''
             container('azurecli') {
                 stage('azure login') {
                     withCredentials([
-                        usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')
-                        string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')
+                        usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID'),
+                        string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID'),
                         string(credentialsId: 'azure-subscription-id', variable: 'AZURE_SUBSCRIPTION_ID')
                         ]) {
                         sh '''
