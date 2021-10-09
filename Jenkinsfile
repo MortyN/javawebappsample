@@ -55,7 +55,7 @@ podTemplate(yaml: '''
                         usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         sh '''
                             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $azure-tenant-id
-                            az account set -s $AZURE_SUBSCRIPTION_ID
+                            az account set -s $azure-subscription-id
                             '''
                         }
                 }
