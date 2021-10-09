@@ -40,7 +40,7 @@ podTemplate(yaml: '''
                 stage('azure login') {
                     withCredentials([usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         sh '''
-                            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+                            curl -sL https://aka.ms/InstallAzureCLIDeb | bash
                             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
                             az account set -s $AZURE_SUBSCRIPTION_ID
                             '''
