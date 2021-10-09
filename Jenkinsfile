@@ -25,7 +25,7 @@ podTemplate(yaml: '''
         - mountPath: '/opt/app/shared'
           name: sharedvolume
       - name: azurecli
-        image: mcr.microsoft.com/azure-cli
+        image: mcr.microsoft.com/azure-cli:latest
         command:
         - sleep
         args:
