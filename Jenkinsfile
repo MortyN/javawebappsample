@@ -19,22 +19,7 @@ podTemplate(yaml: '''
         args:
         - 99d
         tty: true
-        volumeMounts:
-        - mountPath: '/opt/app/shared'
-          name: sharedvolume
-      - name: azurecli
-        image: mcr.microsoft.com/azure-cli:latest
-        command:
-        - sleep
-        args:
-        - 99d
-        tty: true
-        volumeMounts:
-        - mountPath: '/opt/app/shared'
-          name: sharedvolume
-      volumes:
-      - name: sharedvolume
-        emptyDir: {}
+
 
 ''') {
     node(POD_LABEL) {
@@ -51,10 +36,11 @@ podTemplate(yaml: '''
             def webAppName = 'app-service-ci'
             def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
             def ftpProfile = getFtpPublishProfile pubProfilesJson
-            container('azurecli') {
+            container('maven') {
                 stage('azure login') {
                     withCredentials([usernamePassword(credentialsId: 'azure-service-principal-credentials', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         sh '''
+                            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
                             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
                             az account set -s $AZURE_SUBSCRIPTION_ID
                             '''
